@@ -49,8 +49,8 @@ void getImage(int img[50][50], int *M, int *N, int *err)
             i++;
             j = 0;
         }
+        fclose(fptr);
     }
-    fclose(fptr);
 }
 
 void getKernel(int kernel[3][3])
