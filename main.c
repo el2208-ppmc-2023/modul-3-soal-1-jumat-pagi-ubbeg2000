@@ -71,9 +71,9 @@ void conv_2D(int kernel[3][3], int img[50][50], int hasil[50][50], int M, int N)
             {
                 for (int l = -1; l < 2; l++)
                 {
-                    if ((m - k) >= 0 || n - l >= 0)
+                    if (m - k >= 0 && n - l >= 0 && m - k < M && n - l < N)
                     {
-                        hasil[m][n] += kernel[k + 1][l + 1] * img[m - k][n - l];
+                        hasil[m][n] += (kernel[k + 1][l + 1] * img[m - k][n - l]);
                     }
                 }
             }
