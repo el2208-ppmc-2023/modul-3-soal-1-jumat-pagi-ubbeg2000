@@ -12,34 +12,82 @@
 
 void getImage(int img[50][50], int *M, int *N, int *err)
 {
-   //Implementasi ambil matriks gambar dari file txt
-   //MxN adalah BarisxKolom matrix img dan err adalah variable menyatakan file tidak ditemukan 
-   printf("Masukkan nama file gambar: ");
-   //Ambil file gambar dari user
-
-   //Jika file tidak ditemukan
-   printf("Hayo gambar apatuh yang dibuka, kok ga bisa");
+    char str[1000], fileName[20];
+    FILE *fptr;
+    printf("Masukkan nama file gambar: ");
+    scanf("%s", fileName);
+    if ((fptr = fopen(fileName, "r")) == NULL)
+    {
+        // Gambar gagal dibuka
+        printf("Hayo gambar apatuh yang dibuka, kok ga bisa");
+        *err = 1;
+    }
+    else
+    {
+        *err = 0;
+        int i = -1;
+        int j = 0;
+        while (fgets(str, sizeof(str), fptr) != NULL)
+        {
+            char *token = strtok(str, ",");
+            while (token != NULL)
+            {
+                if (i < 0)
+                {
+                    *M = atoi(token);
+                    token = strtok(NULL, ",");
+                    *N = atoi(token);
+                    token = strtok(NULL, ",");
+                }
+                else
+                {
+                    *(*(img + i) + j) = atoi(token);
+                    token = strtok(NULL, ",");
+                    j++;
+                }
+            }
+            i++;
+            j = 0;
+        }
+    }
+    fclose(fptr);
 }
 
 void getKernel(int kernel[3][3])
 {
-    //Implementasi mengambil matriks kernel 3x3 dari user
-
+    for (int i = 0; i < 3; i++)
+    {
+        scanf("%d %d %d", (*(kernel + i) + 0), (*(kernel + i) + 1), (*(kernel + i) + 2));
+    }
 }
 
 void conv_2D(int kernel[3][3], int img[50][50], int hasil[50][50], int M, int N)
 {
-    //Impementasi konvolusi 2D M adalah jumlah baris dan N adalah jumlah kolom img
+    for (int m = 0; m < M; m++)
+    {
+        for (int n = 0; n < N; n++)
+        {
+            for (int k = -1; k < 2; k++)
+            {
+                for (int l = -1; l < 2; l++)
+                {
+                    if ((m - k) >= 0 || n - l >= 0)
+                    {
+                        *(*(hasil + m) + n) += *(*(kernel + (k + 1)) + (l + 1)) * (*(*(img + (m - k)) + n - l));
+                    }
+                }
+            }
+        }
+    }
 }
 
-void printMatrix(...)
+void printMatrix(int matrix[50][50], int M, int N)
 {
-    //Mencetak matrix ke layar
-    for ()
+    for (int i = 0; i < M; i++)
     {
-        for ()
+        for (int j = 0; j < N; j++)
         {
-            printf("%d\t", //matrix[i,j]);
+            printf("%d\t", *(*(matrix + i) + j));
         }
         printf("\n");
     }
@@ -61,17 +109,17 @@ int main()
     getKernel(kernel);
 
     // Masukkan File Gambar
-    getImage(...);
+    getImage(img, &M, &N, &err);
     if (!err)
     {
         // Cetak Gambar Asli
         printf("Gambar Asli:\n");
-        printMatrix(...);
-        conv_2D(...);
+        printMatrix(img, M, N);
+        conv_2D(kernel, img, hasil, M, N);
 
         // Cetak Gambar Hasil Konvolusi
         printf("Gambar Hasil Konvolusi:\n");
-        printMatrix(...);
+        printMatrix(hasil, M, N);
     }
 
     return 0;
