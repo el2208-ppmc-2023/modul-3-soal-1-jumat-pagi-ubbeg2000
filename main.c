@@ -1,5 +1,5 @@
 /** EL2208 Praktikum Pemecahan Masalah dengan C 2022/2023
- *   Modul               : 
+ *   Modul               :
  *   Hari dan Tanggal    :
  *   Nama (NIM)          :
  *   Nama File           : main.c
@@ -41,7 +41,7 @@ void getImage(int img[50][50], int *M, int *N, int *err)
                 }
                 else
                 {
-                    *(*(img + i) + j) = atoi(token);
+                    img[i][j] = atoi(token);
                     token = strtok(NULL, ",");
                     j++;
                 }
@@ -57,7 +57,7 @@ void getKernel(int kernel[3][3])
 {
     for (int i = 0; i < 3; i++)
     {
-        scanf("%d %d %d", (*(kernel + i) + 0), (*(kernel + i) + 1), (*(kernel + i) + 2));
+        scanf("%d %d %d", &kernel[i][0], &kernel[i][1], &kernel[i][2]);
     }
 }
 
@@ -73,7 +73,7 @@ void conv_2D(int kernel[3][3], int img[50][50], int hasil[50][50], int M, int N)
                 {
                     if ((m - k) >= 0 || n - l >= 0)
                     {
-                        *(*(hasil + m) + n) += *(*(kernel + (k + 1)) + (l + 1)) * (*(*(img + (m - k)) + n - l));
+                        hasil[m][n] += kernel[k + 1][l + 1] * img[m - k][n - l];
                     }
                 }
             }
@@ -87,7 +87,7 @@ void printMatrix(int matrix[50][50], int M, int N)
     {
         for (int j = 0; j < N; j++)
         {
-            printf("%d\t", *(*(matrix + i) + j));
+            printf("%d ", matrix[i][j]);
         }
         printf("\n");
     }
